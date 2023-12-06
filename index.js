@@ -24,11 +24,11 @@ const yourxp_elm = document.getElementById("yourxp");
 const yourlv_elm = document.getElementById("yourlv");
 const shop_elm = [document.getElementById("item0"), document.getElementById("item1"), document.getElementById("item2"), document.getElementById("item3")];
 const description_elm = [document.getElementById("description0"), document.getElementById("description1"), document.getElementById("description2"), document.getElementById("description3")];
-const deathsound = new Audio('./snd/death.ogg');
-const attacksound = [new Audio('./snd/attack1.ogg'), new Audio('./snd/attack2.ogg'), new Audio('./snd/attack3.ogg'), new Audio('./snd/attack4.ogg')];
-const critsound = new Audio('./snd/crit.ogg');
-const levelupsound = new Audio('./snd/levelup.ogg');
-const buysound = new Audio('./snd/buy.ogg');
+const deathsound = new Audio('snd/death.ogg');
+const attacksound = [new Audio('snd/attack1.ogg'), new Audio('snd/attack2.ogg'), new Audio('snd/attack3.ogg'), new Audio('snd/attack4.ogg')];
+const critsound = new Audio('snd/crit.ogg');
+const levelupsound = new Audio('snd/levelup.ogg');
+const buysound = new Audio('snd/buy.ogg');
 const need_xp = [40, 90, 170, 300, 500, 790, 1190, 1720, 2400, 3250, 4290, 5540, 7020, 8750, 10750, 13040, 15640, 18570, 21850, 25500, 29540, 33990, 38870, 44200, 50000, 56290, 63090, 70420, 78300, 86750, 95790, 105440, 115720, 126650, 138250, 150540, 163540, 177270, 191750, 207000, 223040, 239890, 257570, 276100, 295500, 315790, 336990, 359120, 382200, 406250];
 const item_list = [
     {name: "Rogue Sword", description: "ATK+100\nReduce attacking cool time by 100ms", cost: 100, need_lv: 2},
@@ -100,7 +100,7 @@ function clicked(overflow = -1) {
                 enemy_hp = 2000;
                 enemyname_elm.innerText = "Special Zealot";
                 enemyhp_elm.innerText = "2000/2000";
-                img_elm.setAttribute('src', './img/special.png');
+                img_elm.setAttribute('src', 'img/special.png');
                 title_elm.style.opacity = "1";
                 title_elm.innerText = "Special Zealot!";
                 setTimeout(() => {
@@ -112,14 +112,14 @@ function clicked(overflow = -1) {
                 enemy_hp = 13000;
                 enemyname_elm.innerText = "Zealot";
                 enemyhp_elm.innerText = "13000/13000";
-                img_elm.setAttribute('src', './img/chest.png');
+                img_elm.setAttribute('src', 'img/chest.png');
             }
             else {
                 enemy_id = 0;
                 enemy_hp = 13000;
                 enemyname_elm.innerText = "Zealot";
                 enemyhp_elm.innerText = "13000/13000";
-                img_elm.setAttribute('src', './img/normal.png');
+                img_elm.setAttribute('src', 'img/normal.png');
             }
             if(boughtitem_flag[5]){
                 clicked(excess_damage);
@@ -266,14 +266,14 @@ function buyItem(index = -1){
         for(let i = 0;i < item_list.length && loaded_item <= 3;i++){
             if(!boughtitem_flag[i]){
                 shoplist[loaded_item] = i;
-                shop_elm[loaded_item].setAttribute('src', `./img/items/${i}.png`);
+                shop_elm[loaded_item].setAttribute('src', `img/items/${i}.png`);
                 description_elm[loaded_item].innerText = `${item_list[i].name}\n${item_list[i].cost} Coins / Lv${item_list[i].need_lv} needed\n${item_list[i].description}`;
                 loaded_item++;
             }
         }
         while(loaded_item <= 3){
             shoplist[loaded_item] = -1;
-            shop_elm[loaded_item].setAttribute('src', `./img/items/soldout.png`);
+            shop_elm[loaded_item].setAttribute('src', `img/items/soldout.png`);
             description_elm[loaded_item].innerText = "";
             loaded_item++;
         }
@@ -298,14 +298,14 @@ function buyItem(index = -1){
         for(let i = 0;i < item_list.length && loaded_item <= 3;i++){
             if(!boughtitem_flag[i]){
                 shoplist[loaded_item] = i;
-                shop_elm[loaded_item].setAttribute('src', `./img/items/${i}.png`);
+                shop_elm[loaded_item].setAttribute('src', `img/items/${i}.png`);
                 description_elm[loaded_item].innerText = `${item_list[i].name}\n${item_list[i].cost} Coins / Lv${item_list[i].need_lv} needed\n${item_list[i].description}`;
                 loaded_item++;
             }
         }
         while(loaded_item <= 3){
             shoplist[loaded_item] = -1;
-            shop_elm[loaded_item].setAttribute('src', `./img/items/soldout.png`);
+            shop_elm[loaded_item].setAttribute('src', `img/items/soldout.png`);
             description_elm[loaded_item].innerText = "";
             loaded_item++;
         }
