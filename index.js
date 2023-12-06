@@ -376,7 +376,7 @@ window.addEventListener('DOMContentLoaded', function () {
     })
     buyItem();
     this.setInterval(() => {
-        statistics.playedtime = Math.floor((statistics.playedtime+0.1)*10)/10;
+        statistics.playedtime = Math.floor((statistics.playedtime+0.11)*10)/10;
         document.cookie = `time=${statistics.playedtime}`;
         playedtime_elm.innerText = `Total Played Time: ${Math.floor(statistics.playedtime/3600)}:${('00'+Math.floor(statistics.playedtime/60)%60).slice(-2)}:${('00'+Math.floor(statistics.playedtime)%60).slice(-2)}`
         coins_elm.innerText = `${coins} Coins`;
