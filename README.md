@@ -1,0 +1,2 @@
+# Zealot-Clicker
+くそげー
