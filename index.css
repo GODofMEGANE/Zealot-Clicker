@@ -1,0 +1,58 @@
+body{
+    font-family: 'VT323', monospace;
+    font-size: large;
+    background-color: #664466;
+    text-shadow: 1px 1px 0 #888888;
+}
+
+#main{
+    margin-top: 80px;
+    text-align: center;
+}
+
+#message{
+    font-size: larger;
+    font-weight: bold;
+}
+
+#coins{
+    color: #999900;
+}
+
+#xp{
+    color: #000099;
+}
+
+#lv{
+    color: #009900;
+}
+
+#enemyhp{
+    color: #ff4444;
+}
+
+#enderman{
+    height: 600px;
+    align-items: center;
+}
+
+.header{
+    background: #ffccff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+ul{
+    list-style: none;
+}
+
+.header-list{
+    text-align: center;
+    display: flex;
+}
+
+.header-item{
+    flex: 1;
+}
