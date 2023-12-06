@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 
 <body>
+    <div id="title">
+        Special Zealot!
+    </div>
+    <div id="crit-message">
+        Critical!
+    </div>
+    <span class="material-symbols-outlined statistics" onclick="openDialog();">
+        analytics
+    </span>
     <header class="header">
         <ul class="header-list">
             <li class="header-item" id="coins">0 Coins</li>
@@ -14,15 +26,67 @@
             <li class="header-item" id="lv">Lv.0</li>
         </ul>
     </header>
+    <header class="popup">
+        <ul class="popup-list">
+            <li class="popup-item" id="got-coins">+0 Coins</li>
+            <li class="popup-item" id="got-xp">+0 XP</li>
+            <li class="popup-item" id="levelup">LevelUP</li>
+        </ul>
+    </header>
     <div id="main">
         <div id="message">Welcome to Zealot Clicker</div>
         <br>
         <div id="enemyname">Zealot</div>
         <div id="enemyhp">13000/13000</div>
-        <img id="enderman" src="/img/normal.png" onclick="clicked();">
+        <img id="enderman" src="./img/normal.png" onclick="clicked();">
+        <div id="shop">
+            <span class="item">
+                <img class="item-image" id="item0" src="./img/items/0.png" onclick="buyItem(0);">
+                <span class="description" id="description0">
+                </span>
+            </span>
+            <span class="item">
+                <img class="item-image" id="item1" src="./img/items/1.png" onclick="buyItem(1);">
+                <span class="description" id="description1">
+                </span>
+            </span>
+            <span class="item">
+                <img class="item-image" id="item2" src="./img/items/2.png" onclick="buyItem(2);">
+                <span class="description" id="description2">
+                </span>
+            </span>
+            <span class="item">
+                <img class="item-image" id="item3" src="./img/items/3.png" onclick="buyItem(3);">
+                <span class="description" id="description3">
+                </span>
+            </span>
+        </div>
     </div>
+
+    <dialog id="statistics-dialog" class="dialog">
+        <div id="dialog-container">
+            <h1>General Statistics</h1>
+            <div id="playedtime">Total Played Time: 0:00:00</div>
+            <div id="totalcoins">Coins Gained: 0 Coins</div>
+            <div id="totalkills">Zealot Kills: 0 Kills</div>
+            <div id="totaldamages">Total Damages: 0 Damages</div>
+            <h1>Your Status</h1>
+            <div id="youratk">ATK: 1000</div>
+            <div id="yourctc">Crit Chance: 5%</div>
+            <div id="yourctd">Crit Damage: +100%</div>
+            <div id="yourxp">Total XP: 1000</div>
+            <div id="yourlv">Level: 1000</div>
+            <br><br>
+            <input type="button" value="WIPE YOUR SAVEDATA" onClick="deleteData();">
+            <br><br>
+            <span class="material-symbols-outlined close" onclick="closeDialog();">
+                close
+            </span>
+        </div>
+    </dialog>
 </body>
+
 </html>
 
-<script type="text/javascript" src="index.js"></script>
-<link rel="stylesheet" type="text/css" href="index.css" />
+<script type="text/javascript" src="./index.js"></script>
+<link rel="stylesheet" type="text/css" href="./index.css" />

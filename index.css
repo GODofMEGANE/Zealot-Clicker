@@ -5,8 +5,14 @@ body{
     text-shadow: 1px 1px 0 #888888;
 }
 
+input{
+    font-family: 'VT323', monospace;
+    font-size: large;
+    color: #ff4444;
+}
+
 #main{
-    margin-top: 80px;
+    margin-top: 10vh;
     text-align: center;
 }
 
@@ -32,7 +38,11 @@ body{
 }
 
 #enderman{
-    height: 600px;
+    height: 60vh;
+    padding: 0 30vw 0 30vw;
+    user-drag: none;
+    -webkit-user-drag: none;
+	-moz-user-select: none;
     align-items: center;
 }
 
@@ -42,6 +52,7 @@ body{
     top: 0;
     left: 0;
     right: 0;
+    height: 8vh;
 }
 
 ul{
@@ -55,4 +66,137 @@ ul{
 
 .header-item{
     flex: 1;
+}
+
+.popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: translateY(-15px);
+}
+
+.popup-list{
+    text-align: center;
+    display: flex;
+}
+
+.popup-item{
+    flex: 1;
+    opacity: 0;
+}
+
+#title{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    font-size: 50pt;
+    white-space: nowrap;
+    color: #bb7700;
+    opacity: 0;
+    z-index: 10;
+    transition: all 200ms 0s ease-in-out;
+}
+
+#crit-message{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    font-size: 25pt;
+    white-space: nowrap;
+    color: #7777bb;
+    opacity: 0;
+    z-index: 10;
+    transition: all 200ms 0s ease-in-out;
+}
+
+.statistics{
+    position: absolute;
+    top: 12vh;
+    left: 4vw;
+    color: #222222;
+    scale: 2;
+    cursor: pointer;
+}
+
+#statistics-dialog{
+    padding: 0;
+    z-index: 10;
+    position: absolute;
+    left: 10vh;
+    width: 80vw;
+    border: 1px solid black;
+    box-shadow: 8px 8px 16px gray;
+    background-color: white;
+    transition: all 100ms 0s ease-in-out;
+    
+}
+
+#dialog-container{
+    padding: 1em;
+}
+
+.close{
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-size: 4vw;
+    cursor: pointer;
+    color: black;
+    transition: all 200ms 0s ease-in-out;
+}
+
+.close:hover{
+    color: red;
+}
+
+#shop{
+    margin-left: 10vw;
+    display: flex;
+    width: 80vw;
+}
+
+.item {
+    width: 10vh;
+    margin: auto;
+    padding: 5px;
+    border: 5px ridge gray;
+}
+
+.item-image {
+    height: 10vh;
+}
+
+.description {
+    width: 300px;
+    position: absolute;
+    left: 50%;
+    bottom: 15%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: #666;
+    font-size: 0.7em;
+    color: #fff;
+    text-align: center;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 1;
+    transition: 0.5s all;
+}
+
+.item:hover .description {
+    bottom: 20%;
+    visibility: visible;
+    opacity: 1;
+}
+
+.description:first-line {
+    color: #ffbb00;
+    font-size: large;
 }
