@@ -16,9 +16,15 @@
     <div id="crit-message">
         Critical!
     </div>
-    <span class="material-symbols-outlined statistics" onclick="openDialog();">
-        analytics
-    </span>
+    <ul class="sidebar">
+        <span class="material-symbols-outlined sideicon slayer" title="Slayer" onclick="openDialog(1);">
+            swords
+        </span>
+        <br>
+        <span class="material-symbols-outlined sideicon statistics" title="Statistics" onclick="openDialog(0);">
+            analytics
+        </span>
+    </ul>
     <header class="header">
         <ul class="header-list">
             <li class="header-item" id="coins">0 Coins</li>
@@ -64,7 +70,7 @@
     </div>
 
     <dialog id="statistics-dialog" class="dialog">
-        <div id="dialog-container">
+        <div class="dialog-container">
             <h1>General Statistics</h1>
             <div id="playedtime">Total Played Time: 0:00:00</div>
             <div id="totalcoins">Coins Gained: 0 Coins</div>
@@ -74,11 +80,64 @@
             <div id="youratk">ATK: 1000</div>
             <div id="yourctc">Crit Chance: 5%</div>
             <div id="yourctd">Crit Damage: +100%</div>
+            <div id="yourzealuck">Zealuck: +0%</div>
             <div id="yourxp">Total XP: 1000</div>
-            <div id="yourlv">Level: 1000</div>
+            <div id="yourlv">Level: 0</div>
             <br><br>
             <input type="button" value="WIPE YOUR SAVEDATA" onClick="deleteData();">
             <br><br>
+            <span class="material-symbols-outlined close" onclick="closeDialog();">
+                close
+            </span>
+        </div>
+    </dialog>
+    <dialog id="slayer-dialog" class="dialog">
+        <div class="dialog-container">
+            <h1>Enderman Slayer</h1>
+            Slay Voidgloom Seraph within 30 seconds!
+            <br><br>
+            <div class="slayer-list">
+                <div class="slayer-tier">
+                    Tier1<br>
+                    Requirements:Lv.5<br>
+                    Cost:10k Coins<br>
+                    <img class="slayer-img tier1" src="img/slayer.png" onclick="challengeSlayer(0);">
+                    <br>
+                    Reward:Zealuck+10%<br>
+                    XP Reward:1k~2kXP<br>
+                    <div id="tier1-status" class="slayer-status"></div>
+                </div>
+                <div class="slayer-tier">
+                    Tier2<br>
+                    Requirements:Tier1 Clear<br>
+                    Cost:100k Coins<br>
+                    <img class="slayer-img tier2" src="img/slayer.png" onclick="challengeSlayer(1);">
+                    <br>
+                    Reward:Zealuck+15%<br>
+                    XP Reward:2k~4kXP<br>
+                    <div id="tier2-status" class="slayer-status"></div>
+                </div>
+                <div class="slayer-tier">
+                    Tier3<br>
+                    Requirements:Tier2 Clear<br>
+                    Cost:1m Coins<br>
+                    <img class="slayer-img tier3" src="img/slayer.png" onclick="challengeSlayer(2);">
+                    <br>
+                    Reward:Zealuck+20%<br>
+                    XP Reward:5k~10kXP<br>
+                    <div id="tier3-status" class="slayer-status"></div>
+                </div>
+                <div class="slayer-tier">
+                    Tier4<br>
+                    Requirements:Tier3 Clear<br>
+                    Cost:3m Coins<br>
+                    <img class="slayer-img tier4" src="img/slayer.png" onclick="challengeSlayer(3);">
+                    <br>
+                    Reward:Zealuck+25%<br>
+                    XP Reward:10k~20kXP<br>
+                    <div id="tier4-status" class="slayer-status"></div>
+                </div>
+            </div>
             <span class="material-symbols-outlined close" onclick="closeDialog();">
                 close
             </span>

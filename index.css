@@ -39,7 +39,6 @@ input{
 
 #enderman{
     height: 60vh;
-    padding: 0 30vw 0 30vw;
     user-drag: none;
     -webkit-user-drag: none;
 	-moz-user-select: none;
@@ -60,6 +59,7 @@ ul{
 }
 
 .header-list{
+    margin-top: 3vh;
     text-align: center;
     display: flex;
 }
@@ -73,10 +73,11 @@ ul{
     top: 0;
     left: 0;
     right: 0;
-    transform: translateY(-15px);
+    height: 8vh;
 }
 
 .popup-list{
+    margin-top: 1vh;
     text-align: center;
     display: flex;
 }
@@ -114,29 +115,31 @@ ul{
     transition: all 200ms 0s ease-in-out;
 }
 
-.statistics{
+.sidebar{
     position: absolute;
-    top: 12vh;
-    left: 4vw;
+    top: 10vh;
+    left: 2vw;
+    line-height: 6vh;
+}
+
+.sideicon{
     color: #222222;
     scale: 2;
     cursor: pointer;
 }
 
-#statistics-dialog{
+.dialog{
     padding: 0;
     z-index: 10;
     position: absolute;
-    left: 10vh;
     width: 80vw;
     border: 1px solid black;
     box-shadow: 8px 8px 16px gray;
     background-color: white;
     transition: all 100ms 0s ease-in-out;
-    
 }
 
-#dialog-container{
+.dialog-container{
     padding: 1em;
 }
 
@@ -199,4 +202,37 @@ ul{
 .description:first-line {
     color: #ffbb00;
     font-size: large;
+}
+
+.slayer-list{
+    display: flex;
+}
+
+.slayer-tier{
+    margin: auto;
+    text-align: center;
+}
+
+.slayer-tier::first-line{
+    font-size: 24px;
+}
+
+.slayer-img{
+    width: 4vw;
+}
+
+.tier1{
+    filter: hue-rotate(0deg);
+}
+
+.tier2{
+    filter: hue-rotate(240deg);
+}
+
+.tier3{
+    filter: hue-rotate(120deg);
+}
+
+.tier4{
+    filter: hue-rotate(60deg);
 }

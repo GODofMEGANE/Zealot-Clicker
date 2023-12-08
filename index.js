@@ -10,7 +10,7 @@ const img_elm = document.getElementById("enderman");
 const popup_elm = [document.getElementById("got-coins"), document.getElementById("got-xp"), document.getElementById("levelup")];
 const title_elm = document.getElementById("title");
 const critmessage_elm = document.getElementById("crit-message");
-const dialog_elm = document.getElementById("statistics-dialog");
+const dialog_elm = [document.getElementById("statistics-dialog"), document.getElementById("slayer-dialog")];
 const playedtime_elm = document.getElementById("playedtime");
 const totalcoins_elm = document.getElementById("totalcoins");
 const totalkills_elm = document.getElementById("totalkills");
@@ -18,8 +18,10 @@ const totaldamages_elm = document.getElementById("totaldamages");
 const youratk_elm = document.getElementById("youratk");
 const yourctc_elm = document.getElementById("yourctc");
 const yourctd_elm = document.getElementById("yourctd");
+const yourzealuck_elm = document.getElementById("yourzealuck");
 const yourxp_elm = document.getElementById("yourxp");
 const yourlv_elm = document.getElementById("yourlv");
+const slayerstatus_elm = [document.getElementById("tier1-status"), document.getElementById("tier2-status"), document.getElementById("tier3-status"), document.getElementById("tier4-status")];
 const shop_elm = [document.getElementById("item0"), document.getElementById("item1"), document.getElementById("item2"), document.getElementById("item3")];
 const description_elm = [document.getElementById("description0"), document.getElementById("description1"), document.getElementById("description2"), document.getElementById("description3")];
 const deathsound = new Audio('snd/death.ogg');
@@ -35,9 +37,12 @@ const item_list = [
     {name: "Emerald Blade", description: "ATK+500\nATK+(Square root of Your Coins (Capped 100M))", cost: 5000, need_lv: 11},
     {name: "Soul Whip", description: "ATK+500\nExcess damage will overflow", cost: 100000, need_lv: 15},
 ];
+const slayer_hplist = [100000, 250000, 500000, 1000000];
+const slayer_costlist = [10000, 100000, 1000000, 3000000];
 
 let coins = 0;
 let enemy_hp = 13000;
+let enemy_maxhp = 13000;
 let enemy_id = 0; //0:Normal 1:Chest 2:Special
 let xp = 0;
 let lv = 0;
@@ -46,7 +51,9 @@ let boughtitem_flag = [false, false, false, false, false, false];
 let shoplist = [0, 1, 2, 3];
 let killflag = false;
 let excess_damage = 0;
-
+let challenge_slayer = -1;
+let slayer_timelimit = 0;
+let slayer_cleared = [false, false, false, false];
 let statistics = {
     playedtime: 0,
     totalcoins: 0,
@@ -64,12 +71,7 @@ function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
         else{
             enemy_hp -= overflow;
         }
-        if (enemy_id == 2) {
-            enemyhp_elm.innerText = `${enemy_hp}/2000`;
-        }
-        else {
-            enemyhp_elm.innerText = `${enemy_hp}/13000`;
-        }
+        enemyhp_elm.innerText = `${enemy_hp}/${enemy_maxhp}`;
         if (enemy_hp <= 0) {
             let reward_coins = before_coins;
             let reward_xp = before_xp;
@@ -90,40 +92,48 @@ function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
                 case 1:
                     reward_coins += 1000 + Math.floor(Math.random() * 1000);
                     reward_xp += 40 + Math.floor(Math.random() * 100);
-                    gotCoins(1000 + Math.floor(Math.random() * 1000));
                     break;
                 case 2:
                     reward_coins += 700000 + Math.floor(Math.random() * 200000);
                     reward_xp += 40 + Math.floor(Math.random() * 200);
                     break;
+                case 3:
+                    slayer_cleared[challenge_slayer] = true;
+                    let slayer_cookie = "slayer=";
+                    for(let i = 0;i < slayer_cleared.length;i++){
+                        if(slayer_cleared[i]){
+                            slayer_cookie += "1";
+                        }
+                        else{
+                            slayer_cookie += "0";
+                        }
+                    }
+                    document.cookie = slayer_cookie;
+                    switch(challenge_slayer){
+                        case 0:
+                            reward_coins += 300 + Math.floor(Math.random() * 200);
+                            reward_xp += 1000 + Math.floor(Math.random() * 1000);
+                            break;
+                        case 1:
+                            reward_coins += 600 + Math.floor(Math.random() * 400);
+                            reward_xp += 2000 + Math.floor(Math.random() * 2000);
+                            break;
+                        case 2:
+                            reward_coins += 1200 + Math.floor(Math.random() * 800);
+                            reward_xp += 5000 + Math.floor(Math.random() * 5000);
+                            break;
+                        case 3:
+                            reward_coins += 2400 + Math.floor(Math.random() * 1600);
+                            reward_xp += 10000 + Math.floor(Math.random() * 10000);
+                            break;
+                    }
+                    showTitle(`Enderman Slayer Tier${challenge_slayer+1} Cleared!`, 3000);
+                    challenge_slayer = -1;
+                    excess_damage = 0;
+                    break;
             }
-            if (Math.floor(Math.random() * 240) == 0) {
-                enemy_id = 2;
-                enemy_hp = 2000;
-                enemyname_elm.innerText = "Special Zealot";
-                enemyhp_elm.innerText = "2000/2000";
-                img_elm.setAttribute('src', 'img/special.png');
-                title_elm.style.opacity = "1";
-                title_elm.innerText = "Special Zealot!";
-                setTimeout(() => {
-                    title_elm.style.opacity = "0";
-                }, 3000);
-            }
-            else if (Math.floor(Math.random() * 20) == 0) {
-                enemy_id = 1;
-                enemy_hp = 13000;
-                enemyname_elm.innerText = "Zealot";
-                enemyhp_elm.innerText = "13000/13000";
-                img_elm.setAttribute('src', 'img/chest.png');
-            }
-            else {
-                enemy_id = 0;
-                enemy_hp = 13000;
-                enemyname_elm.innerText = "Zealot";
-                enemyhp_elm.innerText = "13000/13000";
-                img_elm.setAttribute('src', 'img/normal.png');
-            }
-            if(boughtitem_flag[5]){
+            summonZealot(true);
+            if(boughtitem_flag[5] && excess_damage > 0){
                 clicked(excess_damage, reward_coins, reward_xp);
             }
             else{
@@ -148,6 +158,37 @@ function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
         }
     }
 
+}
+
+function summonZealot(random=true){
+    if (random && Math.floor(Math.random() * 24000)/100 <= getSpecialChance()) {
+        enemy_id = 2;
+        enemy_hp = 2000;
+        enemy_maxhp = 2000;
+        enemyname_elm.innerText = "Special Zealot";
+        enemyhp_elm.innerText = "2000/2000";
+        message_elm.innerText = "SPECIAL ZEALOT!";
+        img_elm.setAttribute('src', 'img/special.png');
+        showTitle("Special Zealot!", 3000);
+    }
+    else if (random && Math.floor(Math.random() * 20) == 0) {
+        enemy_id = 1;
+        enemy_hp = 13000;
+        enemy_maxhp = 13000;
+        enemyname_elm.innerText = "Zealot";
+        enemyhp_elm.innerText = "13000/13000";
+        message_elm.innerText = "Welcome to Zealot Clicker";
+        img_elm.setAttribute('src', 'img/chest.png');
+    }
+    else {
+        enemy_id = 0;
+        enemy_hp = 13000;
+        enemy_maxhp = 13000;
+        enemyname_elm.innerText = "Zealot";
+        enemyhp_elm.innerText = "13000/13000";
+        message_elm.innerText = "Welcome to Zealot Clicker";
+        img_elm.setAttribute('src', 'img/normal.png');
+    }
 }
 
 function gotCoins(got_coins){
@@ -252,20 +293,76 @@ function popup (type, value = 0){
     }, 1000);
 }
 
-function openDialog(){
-    totalcoins_elm.innerText = `Coins Gained: ${statistics.totalcoins} Coins`;
-    totalkills_elm.innerText = `Zealot Kills: ${statistics.totalkills} Kills`;
-    totaldamages_elm.innerText = `Total Damages: ${statistics.totaldamages} Damages`;
-    youratk_elm.innerText = `ATK: ${getAtk(true)}`;
-    yourctc_elm.innerText = `Crit Chance: ${getCritChance()}%`;
-    yourctd_elm.innerText = `Crit Damage: +${getCritDamage()*100-100}%`;
-    yourxp_elm.innerText = `Total XP: ${xp}`;
-    yourlv_elm.innerText = `Level: ${(Math.floor(((lv==0)?(xp/40):(lv+(xp-getNeedXP(lv-1))/(getNeedXP(lv)-getNeedXP(lv-1))))*100)/100).toFixed(2)}`;
-    dialog_elm.showModal();
+function getSpecialChance(){
+    let chance = 1;
+    if(slayer_cleared[0]){
+        chance += 0.1;
+    }
+    if(slayer_cleared[1]){
+        chance += 0.15;
+    }
+    if(slayer_cleared[2]){
+        chance += 0.2;
+    }
+    if(slayer_cleared[3]){
+        chance += 0.25;
+    }
+    return chance;
 }
 
-function closeDialog(){
-    dialog_elm.close();
+function openDialog(id){
+    if(id == 0){
+        totalcoins_elm.innerText = `Coins Gained: ${statistics.totalcoins} Coins`;
+        totalkills_elm.innerText = `Zealot Kills: ${statistics.totalkills} Kills`;
+        totaldamages_elm.innerText = `Total Damages: ${statistics.totaldamages} Damages`;
+        youratk_elm.innerText = `ATK: ${getAtk(true)} (Base 1000 + Level Bonus ${lv}x100 + Other Bonus ${getAtk(true)-lv*100})`;
+        yourctc_elm.innerText = `Crit Chance: ${getCritChance()}%`;
+        yourctd_elm.innerText = `Crit Damage: +${getCritDamage()*100-100}%`;
+        yourzealuck_elm.innerText = `Zealuck: +${Math.round(getSpecialChance()*100-100)}%`;
+        yourxp_elm.innerText = `Total XP: ${xp}`;
+        yourlv_elm.innerText = `Level: ${(Math.floor(((lv==0)?(xp/40):(lv+(xp-getNeedXP(lv-1))/(getNeedXP(lv)-getNeedXP(lv-1))))*100)/100).toFixed(2)}`;
+    }
+    else if(id == 1){
+        for(let i = 0;i < slayerstatus_elm.length;i++){
+            if((i==0 && lv>=5) || (i!=0 && slayer_cleared[i-1])){
+                if(slayer_cleared[i]){
+                    slayerstatus_elm[i].innerText = `Cleared!`;
+                    slayerstatus_elm[i].style.color = "#00FF00";
+                }
+                else{
+                    slayerstatus_elm[i].innerText = `Not Cleared Yet`;
+                    slayerstatus_elm[i].style.color = "#FF0000";
+                }
+            }
+            else{
+                slayerstatus_elm[i].innerText = `Locked`;
+                slayerstatus_elm[i].style.color = "#666666";
+            }
+        }
+        
+    }
+    dialog_elm[id].showModal();
+}
+
+function closeDialog(id=-1){
+    if(id==-1){
+        dialog_elm.forEach(function(elm){
+            elm.close();
+        })
+    }
+    else{
+        dialog_elm[id].close();
+    }
+}
+
+let title_timer_id;
+function showTitle(text, ms){
+    title_elm.style.opacity = "1";
+    title_elm.innerText = text;
+    clearTimeout(title_timer_id);
+    title_timer_id = setTimeout(() => {
+        title_elm.style.opacity = "0";
+    }, ms);
 }
 
 function buyItem(index = -1){
@@ -349,7 +446,22 @@ function deleteData(){
     }
 }
 
-window.addEventListener('DOMContentLoaded', function () {
+function challengeSlayer(tier){
+    if(((tier==0 && lv>=5) || (tier!=0 && slayer_cleared[tier-1])) && coins >= slayer_costlist[tier]){
+        coins -= slayer_costlist[tier];
+        closeDialog();
+        slayer_timelimit = 30;
+        challenge_slayer = tier;
+        enemy_id = 3;
+        enemy_hp = slayer_hplist[tier];
+        enemy_maxhp = slayer_hplist[tier];
+        enemyname_elm.innerText = "Voidgloom Seraph";
+        enemyhp_elm.innerText = `${slayer_hplist[tier]}/${slayer_hplist[tier]}`;
+        img_elm.setAttribute('src', 'img/normal.png');
+    }
+}
+
+function loadCookie(){
     document.cookie.split('; ').forEach(function(value){
         let content = value.split('=');
         if(content[0] == "coins"){
@@ -381,8 +493,23 @@ window.addEventListener('DOMContentLoaded', function () {
         else if(content[0] == "dmg"){
             statistics.totaldamages = Number(content[1]);
         }
-    })
+        else if(content[0] == "slayer"){
+            for(let i = 0;i < content[1].length;i++){
+                if(content[1].charAt(i) == '1'){
+                    slayer_cleared[i] = true;
+                }
+                else{
+                    slayer_cleared[i] = false;
+                }
+            }
+        }
+    });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+    loadCookie();
     buyItem();
+    summonZealot(false);
     this.setInterval(() => {
         statistics.playedtime = Math.floor((statistics.playedtime+0.11)*10)/10;
         document.cookie = `time=${statistics.playedtime}`;
@@ -390,17 +517,22 @@ window.addEventListener('DOMContentLoaded', function () {
         coins_elm.innerText = `${coins} Coins`;
         xp_elm.innerText = `${xp} XP (Next: ${getNeedXP(lv) - xp}XP)`;
         lv_elm.innerText = `Lv.${lv}`;
-        if (enemy_id == 2) {
-            message_elm.innerText = "SPECIAL ZEALOT!";
-        }
-        else {
-            message_elm.innerText = "Welcome to Zealot Clicker";
+        if(challenge_slayer >= 0){
+            slayer_timelimit -= 0.1;
+            message_elm.innerText = `(${slayer_timelimit.toFixed(1)}) Challenging Enderman Slayer ${challenge_slayer+1} (${slayer_timelimit.toFixed(1)})`;
+            if(slayer_timelimit <= 0){
+                challenge_slayer = -1;
+                summonZealot(false);
+                message_elm.innerText = "Slayer failed...";
+            }
         }
     }, 100);
 });
 
-dialog_elm.addEventListener('click', (event) => {
-    if(event.target.closest('#dialog-container') === null) {
-        dialog_elm.close();
-    }
-});
+dialog_elm.forEach(function(elm){
+    elm.addEventListener('click', (event) => {
+        if(event.target.closest('.dialog-container') === null) {
+            elm.close();
+        }
+    });
+})
