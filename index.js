@@ -7,9 +7,7 @@ const coins_elm = document.getElementById("coins");
 const xp_elm = document.getElementById("xp");
 const lv_elm = document.getElementById("lv");
 const img_elm = document.getElementById("enderman");
-const gotcoins_elm = document.getElementById("got-coins");
-const gotxp_elm = document.getElementById("got-xp");
-const levelup_elm = document.getElementById("levelup");
+const popup_elm = [document.getElementById("got-coins"), document.getElementById("got-xp"), document.getElementById("levelup")];
 const title_elm = document.getElementById("title");
 const critmessage_elm = document.getElementById("crit-message");
 const dialog_elm = document.getElementById("statistics-dialog");
@@ -29,7 +27,6 @@ const attacksound = [new Audio('snd/attack1.ogg'), new Audio('snd/attack2.ogg'),
 const critsound = new Audio('snd/crit.ogg');
 const levelupsound = new Audio('snd/levelup.ogg');
 const buysound = new Audio('snd/buy.ogg');
-const need_xp = [40, 90, 170, 300, 500, 790, 1190, 1720, 2400, 3250, 4290, 5540, 7020, 8750, 10750, 13040, 15640, 18570, 21850, 25500, 29540, 33990, 38870, 44200, 50000, 56290, 63090, 70420, 78300, 86750, 95790, 105440, 115720, 126650, 138250, 150540, 163540, 177270, 191750, 207000, 223040, 239890, 257570, 276100, 295500, 315790, 336990, 359120, 382200, 406250];
 const item_list = [
     {name: "Rogue Sword", description: "ATK+100\nReduce attacking cool time by 100ms", cost: 100, need_lv: 2},
     {name: "Tactician's Sword", description: "ATK+(Your Zealot Kills(Capped 10000))\nIncrease CritChance 20%", cost: 500, need_lv: 5},
@@ -57,7 +54,7 @@ let statistics = {
     totaldamages: 0,
 }
 
-function clicked(overflow = -1) {
+function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
     if (can_attack || overflow != -1) {
         if(overflow == -1){
             enemy_hp -= getAtk();
@@ -74,25 +71,30 @@ function clicked(overflow = -1) {
             enemyhp_elm.innerText = `${enemy_hp}/13000`;
         }
         if (enemy_hp <= 0) {
-            deathsound.pause();
-            deathsound.currentTime = 0;
-            deathsound.play();
+            let reward_coins = before_coins;
+            let reward_xp = before_xp;
+            if(overflow == -1){
+                deathsound.pause();
+                deathsound.currentTime = 0;
+                deathsound.play();
+            }
             statistics.totalkills++;
             document.cookie = `kills=${statistics.totalkills}`;
             killflag = true;
             excess_damage = -enemy_hp;
             switch (enemy_id) {
                 case 0:
-                    gotCoins(15 + Math.floor(Math.random() * 10));
-                    gainXP(40 + Math.floor(Math.random() * 10));
+                    reward_coins += 15 + Math.floor(Math.random() * 10);
+                    reward_xp += 15 + Math.floor(Math.random() * 10);
                     break;
                 case 1:
+                    reward_coins += 1000 + Math.floor(Math.random() * 1000);
+                    reward_xp += 40 + Math.floor(Math.random() * 100);
                     gotCoins(1000 + Math.floor(Math.random() * 1000));
-                    gainXP(40 + Math.floor(Math.random() * 100));
                     break;
                 case 2:
-                    gotCoins(700000 + Math.floor(Math.random() * 200000));
-                    gainXP(40 + Math.floor(Math.random() * 200));
+                    reward_coins += 700000 + Math.floor(Math.random() * 200000);
+                    reward_xp += 40 + Math.floor(Math.random() * 200);
                     break;
             }
             if (Math.floor(Math.random() * 240) == 0) {
@@ -122,10 +124,18 @@ function clicked(overflow = -1) {
                 img_elm.setAttribute('src', 'img/normal.png');
             }
             if(boughtitem_flag[5]){
-                clicked(excess_damage);
+                clicked(excess_damage, reward_coins, reward_xp);
+            }
+            else{
+                gotCoins(reward_coins);
+                gainXP(reward_xp);
             }
         }
         else{
+            if(overflow!=-1){
+                gotCoins(before_coins);
+                gainXP(before_xp);
+            }
             attacksound[Math.floor(Math.random() * 4)].play();
             img_elm.style = "filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(55%);";
             can_attack = false;
@@ -155,7 +165,7 @@ function gainXP(got_xp) {
     xp += got_xp;
     document.cookie = `xp=${xp}`;
     popup(1, got_xp);
-    while (xp >= need_xp[lv]) {
+    while (xp >= getNeedXP(lv)) {
         lv++;
         popup(2);
         levelupsound.play();
@@ -219,29 +229,27 @@ function getCooltime() {
     return cooltime;
 }
 
+function getNeedXP(level){
+    return 40*(level+1)+(level*(level+1)*(2*level+1)/6)*10;
+}
+
+let popup_timer_id = [];
 function popup (type, value = 0){
     switch(type){
         case 0:
-            gotcoins_elm.innerText = `+${value} Coins`;
-            gotcoins_elm.style.opacity = "1";
-            setTimeout(() => {
-                gotcoins_elm.style.opacity = "0";
-            }, 1000);
+            popup_elm[type].innerText = `+${value} Coins`;
             break;
         case 1:
-            gotxp_elm.innerText = `+${value} XP`;
-            gotxp_elm.style.opacity = "1";
-            setTimeout(() => {
-                gotxp_elm.style.opacity = "0";
-            }, 1000);
+            popup_elm[type].innerText = `+${value} XP`;
             break;
         case 2:
-            levelup_elm.style.opacity = "1";
-            setTimeout(() => {
-                levelup_elm.style.opacity = "0";
-            }, 1000);
             break;
     }
+    clearTimeout(popup_timer_id[type]);
+    popup_elm[type].style.opacity = "1";
+    popup_timer_id[type] = setTimeout(() => {
+        popup_elm[type].style.opacity = "0";
+    }, 1000);
 }
 
 function openDialog(){
@@ -252,7 +260,7 @@ function openDialog(){
     yourctc_elm.innerText = `Crit Chance: ${getCritChance()}%`;
     yourctd_elm.innerText = `Crit Damage: +${getCritDamage()*100-100}%`;
     yourxp_elm.innerText = `Total XP: ${xp}`;
-    yourlv_elm.innerText = `Level: ${(Math.floor(((lv==0)?(xp/40):(lv+(xp-need_xp[lv-1])/(need_xp[lv]-need_xp[lv-1])))*100)/100).toFixed(2)}`;
+    yourlv_elm.innerText = `Level: ${(Math.floor(((lv==0)?(xp/40):(lv+(xp-getNeedXP(lv-1))/(getNeedXP(lv)-getNeedXP(lv-1))))*100)/100).toFixed(2)}`;
     dialog_elm.showModal();
 }
 
@@ -349,7 +357,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
         else if(content[0] == "xp"){
             xp = Number(content[1]);
-            for(;lv < need_xp.length && xp >= need_xp[lv];lv++){}
+            for(;xp >= getNeedXP(lv);lv++){}
         }
         else if(content[0] == "itemlist"){
             for(let i = 0;i < content[1].length;i++){
@@ -380,7 +388,7 @@ window.addEventListener('DOMContentLoaded', function () {
         document.cookie = `time=${statistics.playedtime}`;
         playedtime_elm.innerText = `Total Played Time: ${Math.floor(statistics.playedtime/3600)}:${('00'+Math.floor(statistics.playedtime/60)%60).slice(-2)}:${('00'+Math.floor(statistics.playedtime)%60).slice(-2)}`
         coins_elm.innerText = `${coins} Coins`;
-        xp_elm.innerText = `${xp} XP (Next: ${need_xp[lv] - xp}XP)`;
+        xp_elm.innerText = `${xp} XP (Next: ${getNeedXP(lv) - xp}XP)`;
         lv_elm.innerText = `Lv.${lv}`;
         if (enemy_id == 2) {
             message_elm.innerText = "SPECIAL ZEALOT!";
