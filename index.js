@@ -31,10 +31,10 @@ const levelupsound = new Audio('snd/levelup.ogg');
 const buysound = new Audio('snd/buy.ogg');
 const item_list = [
     {name: "Rogue Sword", description: "ATK+100\nReduce attacking cool time by 100ms", cost: 100, need_lv: 2},
-    {name: "Tactician's Sword", description: "ATK+(Your Zealot Kills(Capped 10000))\nIncrease CritChance 20%", cost: 500, need_lv: 5},
+    {name: "Tactician's Sword", description: "ATK+(Your Zealot Kills)\nIncrease CritChance 20%", cost: 500, need_lv: 5},
     {name: "Aspect of the End", description: "ATK+300\nNo cool time on your first attack", cost: 2000, need_lv: 5},
     {name: "Raider Axe", description: "ATK+300\nEarn +20 coins from monster kills", cost: 2000, need_lv: 8},
-    {name: "Emerald Blade", description: "ATK+500\nATK+(Square root of Your Coins (Capped 100M))", cost: 5000, need_lv: 11},
+    {name: "Emerald Blade", description: "ATK+500\nATK+(Square root of Your Coins)", cost: 5000, need_lv: 11},
     {name: "Soul Whip", description: "ATK+500\nExcess damage will overflow", cost: 100000, need_lv: 15},
 ];
 const slayer_hplist = [100000, 250000, 500000, 1000000];
@@ -120,11 +120,11 @@ function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
                             break;
                         case 2:
                             reward_coins += 1200 + Math.floor(Math.random() * 800);
-                            reward_xp += 5000 + Math.floor(Math.random() * 5000);
+                            reward_xp += 10000 + Math.floor(Math.random() * 10000);
                             break;
                         case 3:
                             reward_coins += 2400 + Math.floor(Math.random() * 1600);
-                            reward_xp += 10000 + Math.floor(Math.random() * 10000);
+                            reward_xp += 100000 + Math.floor(Math.random() * 100000);
                             break;
                     }
                     showTitle(`Enderman Slayer Tier${challenge_slayer+1} Cleared!`, 3000);
@@ -220,7 +220,7 @@ function getAtk(nocrit = false) {
         atk += 100;
     }
     if(boughtitem_flag[1]){
-        atk += Math.min(statistics.totalkills, 10000);
+        atk += statistics.totalkills;
     }
     if(boughtitem_flag[2]){
         atk += 300;
@@ -230,7 +230,7 @@ function getAtk(nocrit = false) {
     }
     if(boughtitem_flag[4]){
         atk += 500;
-        atk += Math.min(Math.floor(Math.sqrt(coins)), 10000);
+        atk += Math.floor(Math.sqrt(coins));
     }
     if(boughtitem_flag[5]){
         atk += 300;
