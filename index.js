@@ -66,7 +66,7 @@ function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
         if(overflow == -1){
             enemy_hp -= getAtk();
             statistics.totaldamages += getAtk();
-            document.cookie = `dmg=${statistics.totaldamages}`;
+            document.cookie = `dmg=${statistics.totaldamages}; max-age=34560000`;
         }
         else{
             enemy_hp -= overflow;
@@ -81,7 +81,7 @@ function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
                 deathsound.play();
             }
             statistics.totalkills++;
-            document.cookie = `kills=${statistics.totalkills}`;
+            document.cookie = `kills=${statistics.totalkills}; max-age=34560000`;
             killflag = true;
             excess_damage = -enemy_hp;
             switch (enemy_id) {
@@ -108,7 +108,7 @@ function clicked(overflow = -1, before_coins = 0, before_xp = 0) {
                             slayer_cookie += "0";
                         }
                     }
-                    document.cookie = slayer_cookie;
+                    document.cookie = slayer_cookie + '; max-age=34560000';
                     switch(challenge_slayer){
                         case 0:
                             reward_coins += 300 + Math.floor(Math.random() * 200);
@@ -197,14 +197,14 @@ function gotCoins(got_coins){
     }
     coins += got_coins;
     statistics.totalcoins += got_coins;
-    document.cookie = `totalcoins=${statistics.totalcoins}`;
-    document.cookie = `coins=${coins}`;
+    document.cookie = `totalcoins=${statistics.totalcoins}; max-age=34560000`;
+    document.cookie = `coins=${coins}; max-age=34560000`;
     popup(0, got_coins);
 }
 
 function gainXP(got_xp) {
     xp += got_xp;
-    document.cookie = `xp=${xp}`;
+    document.cookie = `xp=${xp}; max-age=34560000`;
     popup(1, got_xp);
     while (xp >= getNeedXP(lv)) {
         lv++;
@@ -388,7 +388,7 @@ function buyItem(index = -1){
         buysound.play();
         coins -= item_list[shoplist[index]].cost;
         boughtitem_flag[shoplist[index]] = true;
-        document.cookie = `coins=${coins}`;
+        document.cookie = `coins=${coins}; max-age=34560000`;
         let itemlist_cookie = "itemlist=";
         for(let i = 0;i < item_list.length;i++){
             if(boughtitem_flag[i]){
@@ -398,7 +398,7 @@ function buyItem(index = -1){
                 itemlist_cookie += "0";
             }
         }
-        document.cookie = itemlist_cookie;
+        document.cookie = itemlist_cookie + '; max-age=34560000';
         let loaded_item = 0;
         for(let i = 0;i < item_list.length && loaded_item <= 3;i++){
             if(!boughtitem_flag[i]){
@@ -419,13 +419,13 @@ function buyItem(index = -1){
 
 function deleteData(){
     if(window.confirm('Are you sure you want to delete savedata?')){
-        document.cookie = "coins=; max-age=0";
-        document.cookie = "xp=; max-age=0";
-        document.cookie = "itemlist=; max-age=0";
-        document.cookie = "time=; max-age=0";
-        document.cookie = "totalcoins=; max-age=0";
-        document.cookie = "kills=; max-age=0";
-        document.cookie = "dmg=; max-age=0";
+        document.cookie = "coins=; max-age=34560000";
+        document.cookie = "xp=; max-age=34560000";
+        document.cookie = "itemlist=; max-age=34560000";
+        document.cookie = "time=; max-age=34560000";
+        document.cookie = "totalcoins=; max-age=34560000";
+        document.cookie = "kills=; max-age=34560000";
+        document.cookie = "dmg=; max-age=34560000;";
         coins = 0;
         enemy_hp = 13000;
         enemy_id = 0;
@@ -512,7 +512,7 @@ window.addEventListener('DOMContentLoaded', function () {
     summonZealot(false);
     this.setInterval(() => {
         statistics.playedtime = Math.floor((statistics.playedtime+0.11)*10)/10;
-        document.cookie = `time=${statistics.playedtime}`;
+        document.cookie = `time=${statistics.playedtime}; max-age=34560000`;
         playedtime_elm.innerText = `Total Played Time: ${Math.floor(statistics.playedtime/3600)}:${('00'+Math.floor(statistics.playedtime/60)%60).slice(-2)}:${('00'+Math.floor(statistics.playedtime)%60).slice(-2)}`
         coins_elm.innerText = `${coins} Coins`;
         xp_elm.innerText = `${xp} XP (Next: ${getNeedXP(lv) - xp}XP)`;
